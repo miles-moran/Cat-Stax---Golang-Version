@@ -53,9 +53,10 @@ func GenerateRotations(P PointArray) []PointArray {
 									newPoint := Point{x, y, z}
 									rotation.Points = append(rotation.Points, newPoint)
 								}
-								rotation.FirstQuadrantConvert()
-								Sort(rotation)
-								if repeatTest(rotations, rotation) == false {
+								rotation.Trim()                               //Moves user input to 0,0 on a coordinate plane
+								rotation.FirstQuadrantConvert()               //Puts reflections/rotations of the point array within the first cuadrant
+								Sort(rotation)                                //Sorts the rotation to easily check for repeats
+								if repeatTest(rotations, rotation) == false { //checks to see of a rotation is not a duplicate
 									rotations = append(rotations, rotation)
 								}
 							}
@@ -110,6 +111,25 @@ func FindMin(P *PointArray, xyz int) Point {
 		}
 	}
 	return min
+}
+
+//Ensures that user input will hug the x y and z axis.
+func (P *PointArray) Trim() *PointArray {
+	for xyz := 0; xyz < 3; xyz++ {
+		min := FindMin(P, xyz)
+		if min.ListFormat()[xyz] != 0 {
+			for i := range P.Points {
+				if xyz == 0 {
+					P.Points[i].X += min.X * -1
+				} else if xyz == 1 {
+					P.Points[i].Y += min.Y * -1
+				} else {
+					P.Points[i].Z += min.Z * -1
+				}
+			}
+		}
+	}
+	return P
 }
 
 //When generating rotations of a PointArray, we get negative values. We need to to put all these points within the first quadrant.
