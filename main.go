@@ -1,29 +1,18 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/miles-moran/catStax/points"
+	"github.com/miles-moran/catStax/shapes"
 )
 
 func main() {
-
-	point0 := points.Point{
-		X: 2,
-		Y: 2,
-		Z: 0,
+	canvas := shapes.Generate3x3Canvas()
+	shape0 := shapes.Generate2x2Square()
+	shape1 := shapes.Generate3x1Rectangle()
+	shape2 := shapes.Generate2x1Rectangle()
+	shapesList := []shapes.Shape{
+		shape0,
+		shape1,
+		shape2,
 	}
-	point1 := points.Point{
-		X: 2,
-		Y: 3,
-		Z: 0,
-	}
-
-	var p = points.PointArray{}
-	p.Points = []points.Point{point0, point1}
-
-	for _, r := range points.GenerateRotations(p) {
-		fmt.Println(r)
-	}
-
+	shapes.Solve(canvas, shapesList)
 }

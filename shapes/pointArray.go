@@ -1,19 +1,7 @@
-package points
-
-type Point struct {
-	X int8
-	Y int8
-	Z int8
-}
+package shapes
 
 type PointArray struct {
 	Points []Point
-}
-
-//Returns an array of size 3. Each item in the array is x, y, and z. In that order. Used for rotation generation.
-func (p Point) ListFormat() [3]int8 {
-	listFormat := [3]int8{p.X, p.Y, p.Z}
-	return listFormat
 }
 
 //Golang won't let me compare slices
@@ -50,7 +38,11 @@ func GenerateRotations(P PointArray) []PointArray {
 									x := p.ListFormat()[a] * signA
 									y := p.ListFormat()[b] * signB
 									z := p.ListFormat()[c] * signC
-									newPoint := Point{x, y, z}
+									newPoint := Point{
+										X: x,
+										Y: y,
+										Z: z,
+									}
 									rotation.Points = append(rotation.Points, newPoint)
 								}
 								rotation.Trim()                               //Moves user input to 0,0 on a coordinate plane
@@ -111,6 +103,17 @@ func FindMin(P *PointArray, xyz int) Point {
 		}
 	}
 	return min
+}
+
+//used for outputing solution in console
+func FindMax(P PointArray, xyz int) Point {
+	max := P.Points[0]
+	for _, p := range P.Points {
+		if p.ListFormat()[xyz] > max.ListFormat()[xyz] {
+			max = p
+		}
+	}
+	return max
 }
 
 //Ensures that user input will hug the x y and z axis.
