@@ -55,7 +55,46 @@ func Solve(canvas Canvas, shapes []Shape) Canvas {
 										fmt.Println("SOLUTION FOUND")
 										return canvas
 									} else {
+										locations3 := locations[3]
+										for _, location3 := range locations3 {
+											allPositions := []PointArray{
+												location0,
+												location1,
+												location2,
+												location3,
+											}
+											if collisionsTest(allPositions) {
+												continue
+											} else {
+												if shapeCount == 4 {
+													claim(canvas, allPositions)
+													fmt.Println("SOLUTION FOUND")
+													return canvas
+												} else {
+													locations4 := locations[4]
+													for _, location4 := range locations4 {
+														allPositions := []PointArray{
+															location0,
+															location1,
+															location2,
+															location3,
+															location4,
+														}
+														if collisionsTest(allPositions) {
+															continue
+														} else {
+															if shapeCount == 5 {
+																claim(canvas, allPositions)
+																fmt.Println("SOLUTION FOUND")
+																return canvas
+															} else {
 
+															}
+														}
+													}
+												}
+											}
+										}
 									}
 								}
 							}
@@ -99,33 +138,4 @@ func claim(canvas Canvas, allPositions []PointArray) Canvas {
 	}
 	CanvasConsoleOutput(canvas)
 	return canvas
-}
-
-func CanvasConsoleOutput(canvas Canvas) {
-	maxZ := int(FindMax(canvas.Points, 2).Z) + 1
-	maxY := int(FindMax(canvas.Points, 1).Y) + 1
-	maxX := int(FindMax(canvas.Points, 0).X) + 1
-
-	for z := 0; z < maxZ; z++ {
-		if z != 0 {
-			fmt.Println("")
-		}
-		for y := 0; y < maxY; y++ {
-			fmt.Println("")
-			for x := 0; x < maxX; x++ {
-				for _, p := range canvas.Points.Points {
-					compare := [3]int8{
-						int8(x),
-						int8(y),
-						int8(z),
-					}
-					if p.ListFormat() == compare {
-						print(p.Occupant)
-					}
-				}
-			}
-		}
-	}
-	println("")
-	println("")
 }
