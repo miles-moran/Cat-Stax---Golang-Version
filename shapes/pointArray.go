@@ -1,7 +1,7 @@
 package shapes
 
 type PointArray struct {
-	Points []Point
+	Points []Point `json:"points"`
 }
 
 //Golang won't let me compare slices

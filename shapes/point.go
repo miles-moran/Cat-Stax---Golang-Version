@@ -1,10 +1,10 @@
 package shapes
 
 type Point struct {
-	X        int8
-	Y        int8
-	Z        int8
-	Occupant int
+	X        int8 `json:"x"`
+	Y        int8 `json:"y"`
+	Z        int8 `json:"z"`
+	occupant int  `json:"occupant,omitempty"`
 }
 
 //func NewPoint() *Point {

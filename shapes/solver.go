@@ -2,9 +2,11 @@ package shapes
 
 import (
 	"fmt"
+	"time"
 )
 
 func Solve(canvas Canvas, shapes []Shape) Canvas {
+	startTime := time.Now()
 
 	locations := [][]PointArray{}
 	for _, s := range shapes {
@@ -22,8 +24,7 @@ func Solve(canvas Canvas, shapes []Shape) Canvas {
 			continue
 		} else {
 			if shapeCount == 1 {
-				claim(canvas, allPositions)
-				fmt.Println("SOLUTION FOUND")
+				claim(canvas, allPositions, startTime)
 				return canvas
 			} else {
 				locations1 := locations[1]
@@ -36,8 +37,7 @@ func Solve(canvas Canvas, shapes []Shape) Canvas {
 						continue
 					} else {
 						if shapeCount == 2 {
-							claim(canvas, allPositions)
-							fmt.Println("SOLUTION FOUND")
+							claim(canvas, allPositions, startTime)
 							return canvas
 						} else {
 							locations2 := locations[2]
@@ -51,8 +51,7 @@ func Solve(canvas Canvas, shapes []Shape) Canvas {
 									continue
 								} else {
 									if shapeCount == 3 {
-										claim(canvas, allPositions)
-										fmt.Println("SOLUTION FOUND")
+										claim(canvas, allPositions, startTime)
 										return canvas
 									} else {
 										locations3 := locations[3]
@@ -67,8 +66,7 @@ func Solve(canvas Canvas, shapes []Shape) Canvas {
 												continue
 											} else {
 												if shapeCount == 4 {
-													claim(canvas, allPositions)
-													fmt.Println("SOLUTION FOUND")
+													claim(canvas, allPositions, startTime)
 													return canvas
 												} else {
 													locations4 := locations[4]
@@ -84,11 +82,30 @@ func Solve(canvas Canvas, shapes []Shape) Canvas {
 															continue
 														} else {
 															if shapeCount == 5 {
-																claim(canvas, allPositions)
-																fmt.Println("SOLUTION FOUND")
+																claim(canvas, allPositions, startTime)
 																return canvas
 															} else {
+																locations5 := locations[5]
+																for _, location5 := range locations5 {
+																	allPositions := []PointArray{
+																		location0,
+																		location1,
+																		location2,
+																		location3,
+																		location4,
+																		location5,
+																	}
+																	if collisionsTest(allPositions) {
+																		continue
+																	} else {
+																		if shapeCount == 6 {
+																			claim(canvas, allPositions, startTime)
+																			return canvas
+																		} else {
 
+																		}
+																	}
+																}
 															}
 														}
 													}
@@ -104,6 +121,7 @@ func Solve(canvas Canvas, shapes []Shape) Canvas {
 			}
 		}
 	}
+	fmt.Println("NO SOLUTION FOUND")
 	return canvas
 }
 
@@ -124,18 +142,40 @@ func collisionsTest(allPositions []PointArray) bool {
 	return false
 }
 
-func claim(canvas Canvas, allPositions []PointArray) Canvas {
+func claim(canvas Canvas, allPositions []PointArray, startTime time.Time) Canvas {
 	for c, cP := range canvas.Points.Points {
 		for s, shape := range allPositions {
 			for _, sP := range shape.Points {
 				if cP.ListFormat() == sP.ListFormat() {
-					canvas.Points.Points[c].Occupant = s
+					canvas.Points.Points[c].occupant = s + 1
 				} else {
 
 				}
 			}
 		}
 	}
+
 	CanvasConsoleOutput(canvas)
+
+	elapsedTime := time.Since(startTime)
+	fmt.Print(elapsedTime)
+	fmt.Print(" - SOLUTION FOUND")
+	fmt.Println("")
 	return canvas
+}
+
+func Prepare(raw []PointArray) {
+	var shapes = []Shape{}
+	var canvas Canvas = Canvas{
+		Points: raw[0],
+	}
+	if len(raw) > 1 {
+		for s := 1; s < len(raw); s++ {
+			var shape = Shape{
+				Rotations: GenerateRotations(raw[s]),
+			}
+			shapes = append(shapes, shape)
+		}
+	}
+	Solve(canvas, shapes)
 }

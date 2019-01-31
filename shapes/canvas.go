@@ -21,7 +21,7 @@ func CanvasConsoleOutput(canvas Canvas) {
 		for y := 0; y < maxY; y++ {
 			fmt.Println("")
 			for x := 0; x < maxX; x++ {
-				occupant := "X"
+				occupant := "-"
 				for _, p := range canvas.Points.Points {
 					compare := [3]int8{
 						int8(x),
@@ -29,7 +29,7 @@ func CanvasConsoleOutput(canvas Canvas) {
 						int8(z),
 					}
 					if p.ListFormat() == compare {
-						occupant = strconv.Itoa(p.Occupant)
+						occupant = strconv.Itoa(p.occupant)
 					} else {
 					}
 				}
@@ -37,6 +37,5 @@ func CanvasConsoleOutput(canvas Canvas) {
 			}
 		}
 	}
-	println("")
-	println("")
+	fmt.Printf("\n\n")
 }

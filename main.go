@@ -1,20 +1,35 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
+
 	"github.com/miles-moran/catStax/shapes"
+
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	canvas := shapes.Generate3x4Canvas()
-	shape0 := shapes.Generate2x2L()
-	shape1 := shapes.Generate3x2L()
-	shape2 := shapes.Generate2x1Rectangle()
-	shape3 := shapes.Generate1x1()
-	shapesList := []shapes.Shape{
-		shape0,
-		shape1,
-		shape2,
-		shape3,
-	}
-	shapes.Solve(canvas, shapesList)
+	router := mux.NewRouter()
+	router.HandleFunc("/api", solve).Methods("POST")
+	fmt.Println("SERVER STARTED AT - PORT 8000")
+	log.Fatal(http.ListenAndServe(":8000", router))
 }
+
+func solve(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var Shapes []shapes.PointArray
+	_ = json.NewDecoder(r.Body).Decode(&Shapes)
+	shapes.Prepare(Shapes)
+	json.NewEncoder(w).Encode(Shapes)
+
+}
+
+//TO RUN API
+//	go build
+
+// ./catstax
+
+// go build && ./catstax
